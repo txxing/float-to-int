@@ -1,0 +1,100 @@
+#include<stdio.h>
+void main()
+{
+	float f=137.354f;
+  unsigned char arr[4];
+  unsigned char *p;
+	p=( unsigned char *)&f;
+
+	int s[24];//存放尾数位
+	int n=0,i,k,j=1,sum=1;
+
+	for(i=0;i<4;i++)
+	{
+		arr[i]=p[i];
+	}	
+	if(arr[3]&0x80)//判断符号位
+	{
+		printf("-");
+	}
+	arr[3]=arr[3]<<1;//移出符号位，补0
+	if(arr[2]&0x80)//判断尾数位第一位是0还是1，如果是1则将指数位最后一位变为1；
+	{
+		arr[3]=arr[3]|1;
+	}
+    for (i=1;i<4;i++)//将尾数位复制、存放在数组里(0,1)
+    {
+        for (int j=0;j<8;j++)
+        {
+            if ((arr[3-i]<<j)&128)//0x80
+            {
+                s[n]=1;
+				        n++;
+            }
+            else
+            {
+                s[n]=0;
+				        n++;
+            }
+		}
+	}
+	k=arr[3]-127;//计算尾数位应取多少位
+	for(i=1;i<=k;i++)//在取出的尾数位前加1；
+	{
+         sum*=2;
+	}
+	while(k>=1)//根据取出的k个尾数位，前加1之后，计算十进制的值
+	{ 
+		int m=1;
+		for(i=k-1;i>=1;i--)
+	    {
+		    m=m*2;
+	    }
+	    m=m*s[j];
+	    sum+=m;
+	    j++;
+		k--;
+	}
+	printf("%d\n",sum);
+	/*for (i=0;i<4;i++)//输出float的二进制形式
+    {
+        for (int j=0;j<8;j++)
+        {
+            if ((arr[3-i]<<j)&128)//0x80 小端模式
+            {
+                printf("1");
+            }
+            else
+            {
+                printf("0");
+            }
+        }
+        printf(" ");
+    }*/
+
+/*//二进制转化为float
+	arr[0]=0;
+    arr[1]=0;
+    arr[2]=96;
+    arr[3]=64;
+
+    for (i=0;i<4;i++)
+    {
+        p[i]=arr[i];
+    }
+    printf("\n%f\n",f);
+	
+	//将二进制转换为float型
+   arr[0]=0x2d;
+    arr[1]=0xb2;
+   arr[2]=0xb5;
+   arr[3]=0x40;
+
+    for (i=0;i<4;i++)
+    {
+        p[i]=arr[i];
+    }
+    printf("\n%f\n",f);*/
+ }
+
+
